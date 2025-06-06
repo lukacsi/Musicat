@@ -1,5 +1,7 @@
 #include "musicat/util/spotify_api.h"
 #include "musicat/util/base64.h"
+#include "musicat/musicat.h"
+#include <list>
 #include <curlpp/Easy.hpp>
 #include <curlpp/Options.hpp>
 #include <nlohmann/json.hpp>
@@ -22,7 +24,17 @@ request(const std::string &url, const std::list<std::string> &headers,
         req.setOpt(curlpp::options::PostFields(post));
         req.setOpt(curlpp::options::PostFieldSize(post.size()));
     }
-    req.perform();
+    if (get_debug_state())
+        fprintf(stderr, "[spotify_api] %s %s\n", post.empty() ? "GET" : "POST",
+                url.c_str());
+
+    try {
+        req.perform();
+    } catch (std::exception &e) {
+        fprintf(stderr, "[spotify_api ERROR] %s: %s\n", url.c_str(), e.what());
+        return "";
+    }
+
     return os.str();
 }
 

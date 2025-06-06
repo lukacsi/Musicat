@@ -25,17 +25,19 @@ request(const std::string &url, const std::list<std::string> &headers,
         req.setOpt(curlpp::options::PostFieldSize(post.size()));
     }
     if (get_debug_state())
-        fprintf(stderr, "[spotify_api] %s %s\n", post.empty() ? "GET" : "POST",
-                url.c_str());
+        fprintf(stderr, "[spotify_api] %s %s\n",
+                post.empty() ? "GET" : "POST", url.c_str());
 
     try {
         req.perform();
+        std::string res = os.str();
+        if (get_debug_state())
+            fprintf(stderr, "[spotify_api] response: %s\n", res.c_str());
+        return res;
     } catch (std::exception &e) {
         fprintf(stderr, "[spotify_api ERROR] %s: %s\n", url.c_str(), e.what());
         return "";
     }
-
-    return os.str();
 }
 
 std::string

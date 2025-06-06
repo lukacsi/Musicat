@@ -57,7 +57,18 @@ docker run -it --rm -v ./exe/sha_conf.docker.json:/home/musicat/sha_conf.json --
 docker run -it --rm -p 3000:3000 -v ./exe/sha_conf.docker.json:/home/musicat/sha_conf.json -v ./exe/music:/home/musicat/music --name Musicat shasha/musicat:latest
 ```
 
-You can create a docker-compose.yml file to integrate with postgresql, configure however you want.
+### Example docker-compose.yml
+
+This repository includes a ready-to-use `docker-compose.yml` that runs
+Musicat together with a PostgreSQL database. The compose file pulls the
+pre-built image `ghcr.io/lukacsi/musicat:latest` and mounts your
+`sha_conf.json` automatically.
+
+Start the stack with:
+
+```sh
+docker compose up -d
+```
 
 ### Docker Misc
 
@@ -83,6 +94,25 @@ cat docker.sh
 
 This repository includes a workflow that builds and pushes the Docker image to GitHub Container Registry. Authentication uses the built-in `GITHUB_TOKEN`, so no additional secrets are required.
 
+### Using the GHCR image
+
+You can pull and run the pre-built image directly from the registry:
+
+```sh
+docker pull ghcr.io/lukacsi/musicat:latest
+```
+
+Register the commands (example for global registration):
+
+```sh
+docker run -it --rm -v ./exe/sha_conf.docker.json:/home/musicat/sha_conf.json --name Musicat-Register ghcr.io/lukacsi/musicat:latest ./Shasha reg g
+```
+
+Run the bot:
+
+```sh
+docker run -it --rm -p 3000:3000 -v ./exe/sha_conf.docker.json:/home/musicat/sha_conf.json -v ./exe/music:/home/musicat/music --name Musicat ghcr.io/lukacsi/musicat:latest
+```
 
 ## Installing Dependencies
 

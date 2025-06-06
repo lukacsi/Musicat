@@ -468,13 +468,41 @@ find_track (const bool playlist, const std::string &arg_query,
     // use mctrack::fetch
     // playlist true means autoplay request, which is always a playlist url
     // query
-    nlohmann::json res = mctrack::fetch (
-        { trimmed_query, YDLP_DEFAULT_MAX_ENTRIES, playlist });
+    if (is_spotify)
+        {
+            if (debug)
+                fprintf (stderr, "[find_track] Spotify query: %s\n",
+                         trimmed_query.c_str ());
 
-    if (res.is_null ())
-        return { {}, 2 };
+            auto sp_tracks
+                = spotify_api::fetch_tracks (trimmed_query, sp_id, sp_secret);
 
-    searches = YTDLPTrack::get_playlist_entries (res);
+            for (const auto &t : sp_tracks)
+                {
+                    std::string q = t.artist + " " + t.title;
+
+                    nlohmann::json res
+                        = mctrack::fetch ( { q, 1, false } );
+
+                    if (res.is_null ())
+                        continue;
+
+                    auto entries = YTDLPTrack::get_playlist_entries (res);
+                    if (!entries.empty ())
+                        searches.push_back (entries.front ());
+                }
+        }
+    else
+        {
+            nlohmann::json res
+                = mctrack::fetch ( { trimmed_query, YDLP_DEFAULT_MAX_ENTRIES,
+                                     playlist } );
+
+            if (res.is_null ())
+                return { {}, 2 };
+
+            searches = YTDLPTrack::get_playlist_entries (res);
+        }
 
 #endif
 

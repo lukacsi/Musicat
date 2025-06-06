@@ -35,6 +35,10 @@ USER musicat
 
 WORKDIR /home/musicat
 
+# create music directory with proper permissions
+RUN mkdir -p /home/musicat/music && \
+    chown musicat:musicat /home/musicat/music
+
 COPY --chown=musicat:musicat --from=build \
              /app/build/Shasha \
              /app/build/libs/DPP/library/libdpp.so* \

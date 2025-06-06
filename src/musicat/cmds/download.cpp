@@ -110,6 +110,9 @@ slash_run (const dpp::slashcommand_t &event)
                         return;
                     case 0:
                         break;
+                    case 3:
+                        event.edit_response ("Spotify support not configured");
+                        return;
                     default:
                         fprintf (
                             stderr,

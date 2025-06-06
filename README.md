@@ -163,9 +163,16 @@ mv Shasha ../exe
 # register the commands
 ./Shasha reg g
 
+
 # run the bot
 ./Shasha
 ```
+
+### Enabling Spotify support
+
+To play tracks or playlists from Spotify links, create a Spotify application and
+add your `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` values to
+`sha_conf.json`. Leave these fields empty to disable Spotify integration.
 
 ### Compiling with clang
 

@@ -30,6 +30,6 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/shasha/musicat:latest
-            ghcr.io/shasha/musicat:${{ github.sha }}
+            ghcr.io/lukacsi/musicat:latest
+            ghcr.io/lukacsi/musicat:${{ github.sha }}
 

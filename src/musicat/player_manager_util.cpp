@@ -333,12 +333,15 @@ find_track (const bool playlist, const std::string &arg_query,
 {
     std::string trimmed_query = util::trim_str (arg_query);
 
+    const bool debug = get_debug_state ();
+
     std::string sp_id = get_spotify_client_id ();
     std::string sp_secret = get_spotify_client_secret ();
     bool spotify_enabled = !sp_id.empty () && !sp_secret.empty ();
 
-    std::regex sp_re(R"((?:spotify[/:]|open\.spotify\.com/)(track|playlist)[/:])");
-    bool is_spotify_url = std::regex_search(trimmed_query, sp_re);
+    std::regex sp_re (
+        R"((?:spotify[/:]|open\.spotify\.com/)(track|playlist)[/:])");
+    bool is_spotify_url = std::regex_search (trimmed_query, sp_re);
 
     if (is_spotify_url && !spotify_enabled)
         return { {}, 3 };
@@ -396,9 +399,13 @@ find_track (const bool playlist, const std::string &arg_query,
                 {
                     if (is_spotify)
                         {
-                            auto sp_tracks =
-                                spotify_api::fetch_tracks (
-                                    trimmed_query, sp_id, sp_secret);
+                            if (debug)
+                                fprintf (stderr,
+                                         "[find_track] Spotify query: %s\n",
+                                         trimmed_query.c_str ());
+
+                            auto sp_tracks = spotify_api::fetch_tracks (
+                                trimmed_query, sp_id, sp_secret);
 
                             for (const auto &t : sp_tracks)
                                 {
@@ -414,7 +421,8 @@ find_track (const bool playlist, const std::string &arg_query,
                             searches
                                 = playlist
                                       ? (playlist_result
-                                         = yt_search::get_playlist (trimmed_query))
+                                         = yt_search::get_playlist (
+                                             trimmed_query))
                                             .entries ()
 
                                       : (search_result
@@ -435,7 +443,13 @@ find_track (const bool playlist, const std::string &arg_query,
             catch (std::exception &e)
                 {
                     std::cerr << "[player::find_track ERROR] " << guild_id
-                              << ':' << e.what () << '\n';
+                              << ':' << e.what ();
+
+                    if (is_spotify)
+                        std::cerr << " (Spotify query: " << trimmed_query
+                                  << ')';
+
+                    std::cerr << '\n';
 
                     return { {}, 1 };
                 }

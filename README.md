@@ -79,6 +79,11 @@ docker container start Musicat
 cat docker.sh
 ```
 
+### GitHub Actions Docker Workflow
+
+This repository includes a workflow that builds and pushes the Docker image to GitHub Container Registry. Authentication uses the built-in `GITHUB_TOKEN`, so no additional secrets are required.
+
+
 ## Installing Dependencies
 
 Ubuntu 22.04.2 LTS:

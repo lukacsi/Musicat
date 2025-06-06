@@ -23,7 +23,8 @@ RUN mkdir -p build && cd build && \
       export LDFLAGS='-flto -stdlib=libc++ -lc++' && \
       export CFLAGS='-flto' && \
       export CXXFLAGS='-flto -stdlib=libc++' && \
-      cmake .. -DDPP_BUILD_TEST=OFF -DRUN_LDCONFIG=OFF -DDPP_NO_VCPKG=ON -DDPP_USE_EXTERNAL_JSON=ON && make all -j12
+      cmake .. -DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+            -DDPP_BUILD_TEST=OFF -DRUN_LDCONFIG=OFF -DDPP_NO_VCPKG=ON -DDPP_USE_EXTERNAL_JSON=ON && make all -j12
       # cmake -DCOMPILE_GNUPLOT=ON .. && make all -j12
 
 FROM init as deploy

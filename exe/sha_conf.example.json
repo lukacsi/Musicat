@@ -1,7 +1,7 @@
 {       // remove all these comments as json doesnt allow comments and it will cause json parse error
     "SHA_TKN": "", // bot token
     "SHA_ID": 0, // bot user id
-    "SHA_SECRET": '', // bot user secret
+    "SHA_SECRET": "", // bot user secret
     "SHA_DB": "dbname=musicat host=db port=5432 user=musicat password=musicat application_name=Musicat", // PostgreSQL connect configuration. See https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-PARAMKEYWORDS
     "DEBUG": false, // Default debug mode state on boot
     "RUNTIME_CLI": true, // Whether to enable runtime cli, enter `help` in console when the bot is running
@@ -30,5 +30,8 @@
     "ADMIN_IDS": [
       750335181285490760
     ], // access to bot /owner commands
-    "GNUPLOT_EXE": "./gnuplot" // gnuplot cmd
+    "GNUPLOT_EXE": "./gnuplot", // gnuplot cmd
+    "SPOTIFY_CLIENT_ID": "",       // required for spotify playlist support
+    "SPOTIFY_CLIENT_SECRET": "",   // required for spotify playlist support
+    "SPOTIFY_TOKEN": ""            // required for spotify playlist support
 }

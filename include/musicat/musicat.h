@@ -148,6 +148,9 @@ std::string get_ytdlp_util_exe ();
 
 std::string get_ytdlp_lib_path ();
 
+std::string get_spotify_client_id ();
+std::string get_spotify_client_secret ();
+
 /**
  * @brief Search _find inside _vec
  *

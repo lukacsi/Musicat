@@ -6,6 +6,7 @@
 #include "musicat/player_manager_timer.h"
 #include "musicat/thread_manager.h"
 #include "musicat/util.h"
+#include "musicat/util/spotify_api.h"
 #include "musicat/util_response.h"
 #include <dirent.h>
 #include <libpq-fe.h>
@@ -332,6 +333,14 @@ find_track (const bool playlist, const std::string &arg_query,
 {
     std::string trimmed_query = util::trim_str (arg_query);
 
+    std::string sp_id = get_spotify_client_id ();
+    std::string sp_secret = get_spotify_client_secret ();
+    bool spotify_enabled = !sp_id.empty () && !sp_secret.empty ();
+
+    std::regex sp_re(R"((?:spotify[/:]|open\.spotify\.com/)(track|playlist)[/:])");
+    bool is_spotify = spotify_enabled &&
+                      std::regex_search(trimmed_query, sp_re);
+
 #ifdef USE_SEARCH_CACHE
     bool has_cache_id = !cache_id.empty ();
 #else
@@ -381,15 +390,33 @@ find_track (const bool playlist, const std::string &arg_query,
         {
             try
                 {
-                    searches
-                        = playlist
-                              ? (playlist_result
-                                 = yt_search::get_playlist (trimmed_query))
-                                    .entries ()
+                    if (is_spotify)
+                        {
+                            auto sp_tracks =
+                                spotify_api::fetch_tracks (
+                                    trimmed_query, sp_id, sp_secret);
 
-                              : (search_result
-                                 = yt_search::search (trimmed_query))
-                                    .trackResults ();
+                            for (const auto &t : sp_tracks)
+                                {
+                                    std::string q = t.artist + " " + t.title;
+                                    auto r = yt_search::search (q);
+                                    if (!r.trackResults ().empty ())
+                                        searches.push_back (
+                                            r.trackResults ().front ());
+                                }
+                        }
+                    else
+                        {
+                            searches
+                                = playlist
+                                      ? (playlist_result
+                                         = yt_search::get_playlist (trimmed_query))
+                                            .entries ()
+
+                                      : (search_result
+                                         = yt_search::search (trimmed_query))
+                                            .trackResults ();
+                        }
 
                     searches_size = searches.size ();
 

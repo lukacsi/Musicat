@@ -48,7 +48,7 @@ get_register_obj (const dpp::snowflake &sha_id)
                               sha_id)
         .add_option (
             dpp::command_option (dpp::co_string, "query",
-                                 "Song [to search] or Youtube URL [to play]")
+                                 "Song [to search] or Youtube/Spotify URL")
                 .set_auto_complete (true)
                 .set_max_length (150))
         .add_option (create_yes_no_option (

@@ -438,6 +438,18 @@ get_ytdlp_lib_path ()
     return get_config_value<std::string> ("YTDLP_LIB_DIR", "");
 }
 
+std::string
+get_spotify_client_id ()
+{
+    return get_config_value<std::string> ("SPOTIFY_CLIENT_ID", "");
+}
+
+std::string
+get_spotify_client_secret ()
+{
+    return get_config_value<std::string> ("SPOTIFY_CLIENT_SECRET", "");
+}
+
 std::vector<std::string>
 get_cors_enabled_origins ()
 {

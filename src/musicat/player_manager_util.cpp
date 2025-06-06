@@ -338,8 +338,12 @@ find_track (const bool playlist, const std::string &arg_query,
     bool spotify_enabled = !sp_id.empty () && !sp_secret.empty ();
 
     std::regex sp_re(R"((?:spotify[/:]|open\.spotify\.com/)(track|playlist)[/:])");
-    bool is_spotify = spotify_enabled &&
-                      std::regex_search(trimmed_query, sp_re);
+    bool is_spotify_url = std::regex_search(trimmed_query, sp_re);
+
+    if (is_spotify_url && !spotify_enabled)
+        return { {}, 3 };
+
+    bool is_spotify = spotify_enabled && is_spotify_url;
 
 #ifdef USE_SEARCH_CACHE
     bool has_cache_id = !cache_id.empty ();
@@ -638,6 +642,12 @@ add_track (bool playlist, dpp::snowflake guild_id, std::string arg_query,
                     break;
 
                 event.edit_response ("Error while searching, try again");
+                return;
+            case 3:
+                if (!from_interaction)
+                    break;
+
+                event.edit_response ("Spotify support not configured");
                 return;
             default:
                 fprintf (stderr,

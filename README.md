@@ -62,7 +62,7 @@ docker run -it --rm -p 3000:3000 -v ./exe/sha_conf.docker.json:/home/musicat/sha
 This repository includes a ready-to-use `docker-compose.yml` that runs
 Musicat together with a PostgreSQL database. The compose file pulls the
 pre-built image `ghcr.io/lukacsi/musicat:latest` and mounts your
-`sha_conf.json` automatically.
+`exe/sha_conf.docker.json` automatically (still needs local configuration).
 
 Start the stack with:
 
@@ -89,10 +89,6 @@ docker container start Musicat
 ```sh
 cat docker.sh
 ```
-
-### GitHub Actions Docker Workflow
-
-This repository includes a workflow that builds and pushes the Docker image to GitHub Container Registry. Authentication uses the built-in `GITHUB_TOKEN`, so no additional secrets are required.
 
 ### Using the GHCR image
 

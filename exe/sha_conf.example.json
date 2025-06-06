@@ -27,7 +27,7 @@
                                                 // best setting is typically between 1/3 and 1/2 of STREAM_BUFFER_SIZE amount
     "YTDLP_UTIL_EXE": "../src/yt-dlp/ytdlp.py", // assumed working directory is in exe/ dir, provide absolute path so it's valid to run regardless of working directory
     "YTDLP_LIB_DIR": "../libs/yt-dlp/",         // assumed working directory is in exe/ dir, provide absolute path so it's valid to run regardless of working directory
-    "SPOTIFY_CLIENT_ID": "", // Spotify client id
+    "SPOTIFY_CLIENT_ID": "", // Spotify client id (leave blank to disable Spotify)
     "SPOTIFY_CLIENT_SECRET": "", // Spotify client secret
     "ADMIN_IDS": [
       750335181285490760

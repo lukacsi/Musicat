@@ -333,8 +333,13 @@ find_track (const bool playlist, const std::string &arg_query,
 {
     std::string trimmed_query = util::trim_str (arg_query);
 
+    std::string sp_id = get_spotify_client_id ();
+    std::string sp_secret = get_spotify_client_secret ();
+    bool spotify_enabled = !sp_id.empty () && !sp_secret.empty ();
+
     std::regex sp_re(R"((?:spotify[/:]|open\.spotify\.com/)(track|playlist)[/:])");
-    bool is_spotify = std::regex_search(trimmed_query, sp_re);
+    bool is_spotify = spotify_enabled &&
+                      std::regex_search(trimmed_query, sp_re);
 
 #ifdef USE_SEARCH_CACHE
     bool has_cache_id = !cache_id.empty ();
@@ -387,9 +392,9 @@ find_track (const bool playlist, const std::string &arg_query,
                 {
                     if (is_spotify)
                         {
-                            auto sp_tracks = spotify_api::fetch_tracks (
-                                trimmed_query, get_spotify_client_id (),
-                                get_spotify_client_secret ());
+                            auto sp_tracks =
+                                spotify_api::fetch_tracks (
+                                    trimmed_query, sp_id, sp_secret);
 
                             for (const auto &t : sp_tracks)
                                 {

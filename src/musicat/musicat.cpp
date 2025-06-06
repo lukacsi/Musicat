@@ -1,9 +1,12 @@
 #include "musicat/musicat.h"
 #include "musicat/cmds.h"
 #include "musicat/util.h"
+#include <algorithm>
 #include <chrono>
 #include <dpp/discordclient.h>
 #include <mutex>
+#include <numeric>
+#include <random>
 #include <vector>
 
 namespace musicat
@@ -225,26 +228,12 @@ format_duration (uint64_t dur)
 std::vector<size_t>
 shuffle_indexes (size_t len)
 {
-    srand (util::get_current_ts ());
+    std::vector<size_t> ret (len);
+    std::iota (ret.begin (), ret.end (), 0);
 
-    std::vector<size_t> ret = {};
-    ret.reserve (len);
-
-    std::vector<size_t> ori = {};
-    ori.reserve (len);
-
-    for (size_t i = 0; i < len; i++)
-        ori.push_back (i);
-
-    auto io = ori.begin ();
-    while (io != ori.end ())
-        {
-            int r = rand () % ori.size ();
-            auto it = io + r;
-
-            ret.push_back (*it);
-            ori.erase (it);
-        }
+    std::random_device rd;
+    std::mt19937 gen (rd ());
+    std::shuffle (ret.begin (), ret.end (), gen);
 
     size_t s = ret.size ();
     if (s != len)

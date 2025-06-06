@@ -488,6 +488,11 @@ find_track (const bool playlist, const std::string &arg_query,
 
     if (searches.begin () == searches.end ())
         {
+            if (debug && is_spotify)
+                fprintf (stderr,
+                         "[find_track] Spotify query yielded no results: %s\n",
+                         trimmed_query.c_str ());
+
             return { {}, -1 };
         }
 
